@@ -1,0 +1,42 @@
+
+body {
+margin : 0;
+}
+#pontos {
+position : absolute;
+width : 100px;
+height : 50px;
+border-style : solid;
+border-color : #000000;
+border-width : 2px;
+padding : 5px;
+top : 0px;
+left : 0px;
+}
+
+#score {
+font-weight : bold;
+color : #FF0000;
+}
+
+#conteudo {
+position : absolute;
+width : 200px;
+height : 400px;
+background-image: url("bk.jpg");
+top : 10px;
+left : 0px;
+}
+button {
+position : absolute;
+}
+
+.pixel {
+width : 19px;
+height : 19px;
+background-image: url("bl.jpg");
+position : absolute;
+border-style : solid;
+border-color : #000000;
+border-width : 1px;
+}
