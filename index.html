@@ -1,230 +1,63 @@
 <html>
  
 <head>
- 
-<title>Tetris</title>
-
- 
-//verifica Colisao do Objeto com pixeis Frente
-function verificaColFrente()
-{
-    Px = 0;
-    Py = 0;
-    captaPosObj();
-    for (c=1;c<=4;c++)
-    {
-        if(pox[c] == 180) return true;
-    }
-    for (c=1;c<(quantPixel-3);c++)
-    {
-        Px = parseInt(document.getElementById("p"+c).style.left);
-        Py = parseInt(document.getElementById("p"+c).style.top);
-        for (b=1;b<=4;b++)
-        {
-            if( (poy[b] == Py) && ((pox[b] + 20) == Px) ) return true;
-        }
-    }
-}
- 
-//verifica Colisao do Objeto com pixeis Frente
-function verificaColAtraz()
-{
-    Px = 0;
-    Py = 0;
-    captaPosObj();
-    for (c=1;c<=4;c++)
-    {
-        if(pox[c] == 0) return true;
-    }
-    for (c=1;c<(quantPixel-3);c++)
-    {
-        Px = parseInt(document.getElementById("p"+c).style.left);
-        Py = parseInt(document.getElementById("p"+c).style.top);
-        for (b=1;b<=4;b++)
-        {
-            if( (poy[b] == Py) && ((pox[b] - 20) == Px) ) return true;
-        }
-    }
-}
- 
-//Limita e detecta colisoes em eixo X
-function limitaMoveFrente()
-{
-    if(!verificaColFrente())
-        moveFrenteObj();
-}
- 
-function limitaMoveAtraz()
-{
-    if(!verificaColAtraz())
-        moveAtrazObj();
-}
- 
-// DETECTOR DE LINHAS COMPLETAS //////////////////////////////////////////////////////////////////////
- 
-//desce linhas pixeis
-function descePixeis(posit)
-{
-    var Px = 0;
-    var Py = 0;
-    document.getElementById("score").innerHTML = parseInt(document.getElementById("score").innerHTML) + 100;
-    switch (parseInt(document.getElementById("score").innerHTML))
-    {
-        case 500:
-            corPixel = "#00FF00";
-            break;
-        case 1000:
-            corPixel = "#0000FF";
-            break;
-        case 1500:
-            corPixel = "#FFFF00";
-            break;
-        case 2000:
-            corPixel = "#00FFFF";
-            break;
-        case 2500:
-            corPixel = "#FF00FF";
-            break;
-        case 3000:
-            corPixel = "#C0C0C0";
-            break;
-        case 3500:
-            corPixel = "#FFFFFF";
-            break;
-        case 4000:
-            alert("VOCE GANHOU!!! PARABENS!!!");
-            window.location.reload();
-            break;
-    }
- 
     
-    for (c=1;c<(quantPixel-3);c++)
-    {
-        Px = parseInt(document.getElementById("p"+c).style.left);
-        Py = parseInt(document.getElementById("p"+c).style.top);
-        //window.alert("x: "+Px+"; y: "+Py);
-        if(Py == posit)
-        {
-        document.getElementById("p"+c).style.top = "400px";
-        document.getElementById("p"+c).style.display = "none";
-        }
-        if( Py < posit ) movePixelBaixo("p"+c);  
-    }
-}
+    <script type="text/javascript" src="gameEngine.js"></script>
  
-//Detecta Linha Completa
-function buscaLinhas()
-{
-    var totalX = 0;
-    for (f=380;f>0;f-=20)
-    {    
-        totalX = 0;
-        for (c=1;c<(quantPixel-3);c++)
-        {
-        Py = parseInt(document.getElementById("p"+c).style.top);
-        if(Py == 0) window.location.reload();
-        if(Py == f) totalX++;  
-        }
-        if(totalX == 10) descePixeis(f);
-    }
- 
-}
+    <title>Tetris</title>
 
-// Funcao Final
-function Play()
-{
-    buscaLinhas();
-   if(!verificaColBaixo())
-   {
-        desceObj();
-   }
-   else
-   {
-        if(downVar) clearInterval(timer2);
-        downVar = false;
-        movimento = 1;
-        geraObjRandom();  
-   } 
-}
  
-////CONTROLE DE OBJETO PELO TECLADO /////////////////////////////////////////////////////////////////////
-downVar = false;
-function verifaTeclaPress(e)
-{
-    var codTecla;
-    if(window.event)
-        codTecla = window.event.keyCode;
-    else
-        if(e)
-            codTecla = e.which;
-            
-        //verifica tecla
-        switch (codTecla)
-        {
-            case 39:             // --->
-                limitaMoveFrente();        
-                break;
-            case 37:             // <---
-                limitaMoveAtraz();
-                break;
-            case 38:             // UP
-                giraObj();
-                break;
-            case 40:
-                timer2 = setInterval("Play()",10);
-                downVar = true;
-                
-        }
-}
-function verifaTeclaPress2(e)
-{
-    var codTecla;
-    if(window.event)
-        codTecla = window.event.keyCode;
-    else
-        if(e)
-            codTecla = e.which;
-            
-        //verifica tecla
-        switch (codTecla)
-        {
-            case 40:
-                clearInterval(timer2);
-                downVar = true;
-                
-        }
-}
-// CARREGA EVENTOS NO BOTOES /////////////////////////////////////////////////////////////////////////////////////
-function redimen()
-{
-    tamanhoWin = document.body.clientWidth;
-    tamanhoDisplay = document.getElementById("conteudo").clientWidth;
-    tamanhobtPlay = document.getElementById("btPlay").clientWidth;
-    document.getElementById("conteudo").style.left = parseInt(tamanhoWin / 2) - parseInt(tamanhoDisplay / 2);
-    document.getElementById("pontos").style.left = parseInt(tamanhoWin / 2) + parseInt(tamanhoDisplay / 2) + 10;
-    document.getElementById("btPlay").style.left = parseInt(tamanhoWin / 2) - parseInt(tamanhobtPlay / 2);
-}
- 
-function carrega()
-{
-    document.getElementById("btPlay").onclick = function ()
-                                                 {
-                                                    geraObjRandom();
-                                                    timer1 = setInterval("Play()",1000);
-                                                    document.getElementById("btPlay").style.display="none";
-                                                    document.onkeydown = verifaTeclaPress;
-                                                    document.onkeyup = verifaTeclaPress2;
-                                                 }
-   redimen();
-}
-window.onload = carrega;
-window.onresize = redimen;
- 
-</script>
+
+
+
+
  
 </head>
  
 <body>
+    <style>
+        body {
+    margin : 0;
+    }
+    #pontos {
+    position : absolute;
+    width : 100px;
+    height : 50px;
+    border-style : solid;
+    border-color : #000000;
+    border-width : 2px;
+    padding : 5px;
+    top : 0px;
+    left : 0px;
+    }
+     
+    #score {
+    font-weight : bold;
+    color : #FF0000;
+    }
+     
+    #conteudo {
+    position : absolute;
+    width : 200px;
+    height : 400px;
+    background-image: url("bk.jpg");
+    top : 10px;
+    left : 0px;
+    }
+    button {
+    position : absolute;
+    }
+     
+    .pixel {
+    width : 19px;
+    height : 19px;
+    background-image: url('bl.jpg');
+    position : absolute;
+    border-style : solid;
+    border-color : #000000;
+    border-width : 1px;
+    }
+        </style>
  
 <div id="conteudo">
  
